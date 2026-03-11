@@ -313,6 +313,10 @@ async function claimFaucet() {
        else {
   msgEl.textContent = '❌ ' + (err || 'Claim failed');
 
+setTimeout(() => {
+  if (msgEl) msgEl.textContent = '';
+}, 5000);
+
   if ((err || '').includes('24h')) {
     setTimeout(() => {
       if (msgEl) msgEl.textContent = '';
