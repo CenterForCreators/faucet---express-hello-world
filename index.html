@@ -785,11 +785,15 @@ setTimeout(() => {
           if(claimStatus){ claimStatus.className='status ok'; claimStatus.textContent='✅ 25 CFC sent (pending ledger)…'; }
           setTimeout(()=>connectXRPLAndLoadBalances(account), 8000);
         }else{
-          if (claimStatus){ 
-  claimStatus.className='status err'; 
-  claimStatus.textContent=''; 
+         if (claimStatus){
+  claimStatus.className='status err';
+  claimStatus.textContent='Faucet already claimed (24h limit)';
+
+  setTimeout(() => {
+    claimStatus.textContent = '';
+  }, 5000);
 }
-        }
+ }
       }catch(e){
         if(claimStatus){
   const txt = (e && e.message) ? e.message : '';
