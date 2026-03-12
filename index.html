@@ -1862,6 +1862,64 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 });
 </script>
+<script>
+(function () {
+  const ISSUER = 'rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8';
+  const CURRENCY = 'CFC';
+  const WSS = 'wss://s1.ripple.com';
 
+  async function loadWalletBarBalances() {
+    try {
+      const account =
+        localStorage.getItem('xummAccount') ||
+        sessionStorage.getItem('cfc_addr') ||
+        localStorage.getItem('xrpl_account');
+
+      if (!account || !window.xrpl) return;
+
+      const connectedAddressEl = document.getElementById('connectedAddress');
+      const wbXrpEl = document.getElementById('wb_xrp');
+      const wbCfcEl = document.getElementById('wb_cfc');
+      const walletbarEl = document.getElementById('walletbar');
+
+      if (connectedAddressEl) connectedAddressEl.textContent = account;
+      if (walletbarEl) walletbarEl.style.display = 'flex';
+
+      const client = new xrpl.Client(WSS);
+      await client.connect();
+
+      const info = await client.request({
+        command: 'account_info',
+        account,
+        ledger_index: 'validated'
+      });
+
+      const xrpBalance = (Number(info.result.account_data.Balance) / 1000000).toFixed(6);
+
+      const lines = await client.request({
+        command: 'account_lines',
+        account,
+        peer: ISSUER,
+        ledger_index: 'validated'
+      });
+
+      const cfcLine = (lines.result.lines || []).find(
+        line => line.currency === CURRENCY
+      );
+
+      const cfcBalance = cfcLine ? cfcLine.balance : '0';
+
+      if (wbXrpEl) wbXrpEl.textContent = xrpBalance;
+      if (wbCfcEl) wbCfcEl.textContent = cfcBalance;
+
+      await client.disconnect();
+    } catch (error) {
+      console.error('Wallet bar balance load failed:', error);
+    }
+  }
+
+  window.addEventListener('load', loadWalletBarBalances);
+})();
+</script>
 </body> 
 </html>
