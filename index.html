@@ -1188,55 +1188,7 @@ x.payload.createAndSubscribe(
   });
 })();
 </script>
-<script>
-(() => {
-  let connectedAccount = null;
 
-  async function restore() {
-    try {
-      const saved = localStorage.getItem('xummAccount');
-      if (saved) {
-        connectedAccount = saved;
-        const el = document.getElementById('connectedAddress');
-        if (el) el.textContent = saved;
-        if (typeof fetchBalances === 'function') {
-          await fetchBalances(saved);
-        }
-      }
-    } catch(e) { console.error(e); }
-  }
-
-  async function claim() {
-    const s = document.getElementById('claimStatus');
-    if (!connectedAccount || connectedAccount === 'undefined' || connectedAccount === null) {
-      if (s) s.textContent = 'Connect Wallet First';
-      return;
-    }
-    try {
-      const resp = await fetch('https://cfc-faucet.onrender.com/api/faucet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ account: connectedAccount, captcha_ok: true })
-      });
-      const data = await resp.json();
-      if (data.ok) {
-        if (s) s.textContent = 'Success! Faucet sent.';
-        if (typeof fetchBalances === 'function') await fetchBalances(connectedAccount);
-      } else {
-        if (s) s.textContent = data.error || 'Faucet failed.';
-      }
-    } catch (e) {
-      if (s) s.textContent = 'Network error.';
-    }
-  }
-
-  window.addEventListener('load', restore);
-  const btn = document.getElementById('connectBtn');
-  if (btn) btn.addEventListener('click', connectNow);
-  const cbtn = document.getElementById('claimBtn');
-  if (cbtn) cbtn.addEventListener('click', (e)=>{ e.preventDefault(); claim(); });
-})();
-</script>
 <!-- Injected: targeted fixes overlay -->
 <script>
 (function(){
