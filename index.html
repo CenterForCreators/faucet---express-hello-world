@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 
 <html>
@@ -317,6 +318,12 @@ setTimeout(() => {
   if (msgEl) msgEl.textContent = '';
 }, 5000);
 
+  if ((err || '').includes('24h')) {
+    setTimeout(() => {
+      if (msgEl) msgEl.textContent = '';
+    }, 5000);
+      }
+    }
   } catch (e) {
     console.error('claim error', e);
     if (msgEl) msgEl.textContent = 'Server error. Try again.';
@@ -785,23 +792,13 @@ setTimeout(() => {
           if(claimStatus){ claimStatus.className='status ok'; claimStatus.textContent='✅ 25 CFC sent (pending ledger)…'; }
           setTimeout(()=>connectXRPLAndLoadBalances(account), 8000);
         }else{
-         if (claimStatus){
-  claimStatus.className='status err';
-  claimStatus.textContent='Faucet already claimed (24h limit)';
-
-  setTimeout(() => {
-    claimStatus.textContent = '';
-  }, 5000);
+          if (claimStatus){ 
+  claimStatus.className='status err'; 
+  claimStatus.textContent=''; 
 }
- }
+        }
       }catch(e){
-        if(claimStatus){
-  const txt = (e && e.message) ? e.message : '';
-  if(!txt.includes('tefPAST_SEQ')){
-    claimStatus.className='status err';
-    claimStatus.textContent='Network error';
-  }
-}
+        if(claimStatus){ claimStatus.className='status err'; claimStatus.textContent='Network error'; }
       }finally{
         if(claimSpin){ claimSpin.style.display='none'; }
       }
