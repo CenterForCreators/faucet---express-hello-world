@@ -872,79 +872,7 @@ x.payload.createAndSubscribe(
     }
   }
 })();
-</script>
 
-<!-- CFC-AUTO-SCRIPT -->
-<script>
-(function(){
-  const connectBtn = document.getElementById('connectBtn');
-  const addrBadge  = document.getElementById('addrBadge');
-  const xrpBalEl   = document.getElementById('xrpBal');
-  const cfcBalEl   = document.getElementById('cfcBal');
-  const claimBtn   = document.getElementById('claimBtn');
-  const CONFIG     = window.CONFIG || {};
-  let connectedAccount = null;
-
-  function isValidR(r){ return typeof r === 'string' && /^r[1-9A-HJ-NP-Za-km-z]{25,}$/i.test(r); }
-  function setConnected(addr){
-    if(!isValidR(addr)) return;
-    connectedAccount = addr;
-    try { sessionStorage.setItem("cfc_addr", addr); } catch(e){}
-    if(connectBtn){ connectBtn.textContent = "Connected"; connectBtn.disabled = false; }
-    if(addrBadge){ addrBadge.textContent = addr; }
-    fetchBalances(addr);
-  }
-
-  async function fetchBalances(address){
-    try{
-      if(!window.xrpl) return;
-      const client = new xrpl.Client("wss://s1.ripple.com");
-      await client.connect();
-      const info = await client.request({ command:"account_info", account: address, ledger_index:"validated" });
-      const xrp = (parseInt(info.result.account_data.Balance||"0",10)/1e6).toFixed(6);
-      if(xrpBalEl) xrpBalEl.textContent = xrp;
-      const code = (CONFIG.currencyCode || "CFC");
-      const issuer = (CONFIG.issuer || "rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8");
-      const lines = await client.request({ command:"account_lines", account: address, ledger_index:"validated", peer: issuer });
-      const line = (lines.result.lines||[]).find(l => l.currency === code);
-      if(cfcBalEl) cfcBalEl.textContent = line ? line.balance : "0";
-      await client.disconnect();
-    }catch(e){ console.error("balance fetch error", e); }
-  }
-
-  try{ const prev = sessionStorage.getItem("cfc_addr"); if(isValidR(prev)) setConnected(prev); }catch(e){}
-
-  if(window.xumm && window.xumm.on){
-    try{
-      window.xumm.on("ready", () => {
-        try{ if(window.xumm.user && window.xumm.user.account) setConnected(window.xumm.user.account); }catch(e){}
-      });
-      window.xumm.on("success", (e) => {
-        const acc = (e && e.me && e.me.account) ? e.me.account : (e && e.account ? e.account : null);
-        if(acc) setConnected(acc);
-      });
-      window.xumm.on("retrieved", (e) => {
-        const acc = (e && e.me && e.me.account) ? e.me.account : (e && e.account ? e.account : null);
-        if(acc) setConnected(acc);
-      });
-    }catch(e){}
-  }
-
-  if(claimBtn){
-    claimBtn.addEventListener('click', async function(){
-      try{
-        if(!isValidR(connectedAccount)){ return; }
-        const payload = { account: connectedAccount, captcha_ok: true };
-        const ep = CONFIG.FAUCET_ENDPOINT || "https://cfc-faucet.onrender.com/api/faucet";
-        const r = await fetch(ep, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
-        if(r.ok){ fetchBalances(connectedAccount); }
-        const txt = await r.text().catch(()=>"" );
-        if(!r.ok){ console.error("Claim failed:", txt); }
-      }catch(err){ console.error("Claim error", err); }
-    });
-  }
-})();
-</script>
 </div></div>
 <script>
 (function() {
