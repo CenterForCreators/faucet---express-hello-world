@@ -309,27 +309,25 @@ async function claimFaucet() {
       try { await connectXRPLAndLoadBalances(account); } catch (_) {}
       try { if (typeof regenCaptcha === 'function') regenCaptcha(); } catch (_) {}
       try { if (typeof newCaptcha === 'function') newCaptcha(); } catch (_) {}  // moved here
+  } else {
+  if (msgEl) {
+    const err = (data && (data.error || data.message)) || '';
+
+    if (/invalid account/i.test(err)) {
+      msgEl.textContent = '';
     } else {
-      if (msgEl) {
-        const err = (data && (data.error || data.message)) || '';
-        if (/invalid account/i.test(err)) msgEl.textContent = '';
-       else {
-  msgEl.textContent = '❌ ' + (err || 'Claim failed');
+      msgEl.textContent = '❌ ' + (err || 'Claim failed');
 
-setTimeout(() => {
-  if (msgEl) msgEl.textContent = '';
-}, 5000);
-
-  if ((err || '').includes('24h')) {
-    setTimeout(() => {
-      if (msgEl) msgEl.textContent = '';
-    }, 5000);
-      }
+      setTimeout(() => {
+        if (msgEl) msgEl.textContent = '';
+      }, 5000);
     }
-  } catch (e) {
-    console.error('claim error', e);
-    if (msgEl) msgEl.textContent = 'Server error. Try again.';
-  } finally {
+  }
+}
+catch (e) {
+  console.error('claim error', e);
+  if (msgEl) msgEl.textContent = 'Server error. Try again.';
+} finally {
     if (spin) spin.style.display = 'none';
   }
 }
