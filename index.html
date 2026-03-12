@@ -317,12 +317,6 @@ setTimeout(() => {
   if (msgEl) msgEl.textContent = '';
 }, 5000);
 
-  if ((err || '').includes('24h')) {
-    setTimeout(() => {
-      if (msgEl) msgEl.textContent = '';
-    }, 5000);
-      }
-    }
   } catch (e) {
     console.error('claim error', e);
     if (msgEl) msgEl.textContent = 'Server error. Try again.';
