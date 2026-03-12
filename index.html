@@ -1344,7 +1344,9 @@ const cfcBalEl = document.getElementById('wb_cfc');
     var targets = [gid('wallet-address'), gid('connectedAddress'), gid('addrBadge'), gid('walletbar')].filter(Boolean);
     targets.forEach(function(el){
       try{ el.innerHTML = el.innerHTML.replace('[object Promise]','').replace(/XRP:\s*—?/gi,'').replace(/CFC:\s*—?/gi,''); }catch(e){}
-      el.textContent = (isR(a) ? 'Connected Account: ' + a : 'Wallet Status: CONNECT');
+   if(el.id === 'connectedAddress'){
+  el.textContent = (isR(a) ? 'Connected Account: ' + a : 'Wallet Status: CONNECT');
+}
     });
     var btn = gid('connect-wallet') || gid('connectXumm') || gid('xummConnect') || gid('connectBtn');
     if (btn) btn.textContent = isR(a) ? 'Disconnect XUMM Wallet' : 'Connect XUMM Wallet';
