@@ -289,7 +289,6 @@ async function claimFaucet() {
     }
 
     if (msgEl) msgEl.textContent = 'Claiming...';
-      document.getElementById('claimBtn').disabled = true;
     if (spin) spin.style.display = 'inline-block';
 
     const ep = (window.CONFIG && (CONFIG.FAUCET_ENDPOINT || CONFIG.FAUCET_URL))
