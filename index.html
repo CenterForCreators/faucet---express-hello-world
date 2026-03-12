@@ -798,7 +798,13 @@ setTimeout(() => {
 }
         }
       }catch(e){
-        if(claimStatus){ claimStatus.className='status err'; claimStatus.textContent='Network error'; }
+        if(claimStatus){
+  const txt = (e && e.message) ? e.message : '';
+  if(!txt.includes('tefPAST_SEQ')){
+    claimStatus.className='status err';
+    claimStatus.textContent='Network error';
+  }
+}
       }finally{
         if(claimSpin){ claimSpin.style.display='none'; }
       }
