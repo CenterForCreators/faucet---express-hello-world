@@ -289,6 +289,7 @@ async function claimFaucet() {
     }
 
     if (msgEl) msgEl.textContent = 'Claiming...';
+     document.getElementById('claimBtn').disabled = true; 
     if (spin) spin.style.display = 'inline-block';
 
     const ep = (window.CONFIG && (CONFIG.FAUCET_ENDPOINT || CONFIG.FAUCET_URL))
@@ -323,14 +324,16 @@ async function claimFaucet() {
     }
   }
 }
-catch (e) {
+
+  } catch (e) {
   console.error('claim error', e);
   if (msgEl) msgEl.textContent = 'Server error. Try again.';
 } finally {
-    if (spin) spin.style.display = 'none';
-  }
+  if (spin) spin.style.display = 'none';
+  document.getElementById('claimBtn').disabled = false;
 }
-
+}  
+ 
 async function buyWithXRP(item){
 
       const amountDrops = Math.round(Number(item.priceXRP) * 1_000_000).toString()
