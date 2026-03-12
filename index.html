@@ -861,16 +861,6 @@ x.payload.createAndSubscribe(
     }catch(e){ console.warn(e); }
   }
 
-  // Hook faucet Claim button to pass account
-  var claimBtn = document.getElementById('claimBtn');
-  if(claimBtn){
-    claimBtn.addEventListener('click', function(){
-      // If page has existing handler, we don't override; we look for a known status element to update after
-      // Instead, we intercept fetch by exposing CONFIG.FAUCET_ENDPOINT and expecting app code to read CONFIG
-      // No-op here.
-    });
-  }
-
   // Patch Claim to include account if site uses a global sendClaim function
   if (typeof window.sendClaim==='function'){
     var orig = window.sendClaim;
