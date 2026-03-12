@@ -711,6 +711,7 @@ try {
         const ai = await client.request({ command:'account_info', account: acct, ledger_index:'validated' });
         const xrp = (ai.result.account_data.Balance/1000000).toFixed(6);
         setXrp(xrp);
+          document.getElementById('wb_xrp').textContent = xrp;
       }catch(e){ setXrp('—'); }
       if(CONFIG.CFC_ISSUER){
         try{
@@ -720,6 +721,7 @@ try {
             if(line.currency===CONFIG.CFC_CURRENCY){ cfc = line.balance; }
           });
           setCfc(cfc);
+           document.getElementById('wb_cfc').textContent = cfc; 
           const hasLine = (al.result.lines||[]).some(l => l.currency===CONFIG.CFC_CURRENCY);
           if(wtrust) wtrust.style.display = hasLine ? 'none' : 'inline-block';
         }catch(e){
