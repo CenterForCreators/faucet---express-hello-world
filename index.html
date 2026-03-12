@@ -95,10 +95,7 @@
 <span class="muted">XRP:</span><span id="wb_xrp">—</span>
 <span class="muted">CFC:</span><span id="wb_cfc">—</span>
 <button class="btn small" id="wb_trust" style="display:none" type="button">Add CFC Trustline</button>
-<span id="connectedAddress">Not connected</span>
-<span class="muted"> | XRP:</span><span id="wb_xrp">—</span>
-<span class="muted"> | CFC:</span><span id="wb_cfc">—</span>
-</div>
+<span id="connectedAddress">Not connected</span></div>
 <div class="card" id="faucetCard" style="margin-bottom:16px">
 <div class="row" style="justify-content:space-between">
 <div>
@@ -712,7 +709,6 @@ try {
         const ai = await client.request({ command:'account_info', account: acct, ledger_index:'validated' });
         const xrp = (ai.result.account_data.Balance/1000000).toFixed(6);
         setXrp(xrp);
-          document.getElementById('wb_xrp').textContent = xrp;
       }catch(e){ setXrp('—'); }
       if(CONFIG.CFC_ISSUER){
         try{
@@ -722,7 +718,6 @@ try {
             if(line.currency===CONFIG.CFC_CURRENCY){ cfc = line.balance; }
           });
           setCfc(cfc);
-           document.getElementById('wb_cfc').textContent = cfc; 
           const hasLine = (al.result.lines||[]).some(l => l.currency===CONFIG.CFC_CURRENCY);
           if(wtrust) wtrust.style.display = hasLine ? 'none' : 'inline-block';
         }catch(e){
@@ -983,8 +978,8 @@ x.payload.createAndSubscribe(
 (function(){
   // Globals
   const connectBtn = document.getElementById('connectBtn');
-const xrpBalEl = document.getElementById('wb_xrp');
-const cfcBalEl = document.getElementById('wb_cfc');
+  const cfcBalEl = document.getElementById('cfcBal');
+  const xrpBalEl = document.getElementById('xrpBal');
   const addrBadge = document.getElementById('addrBadge');
 
   let connectedAccount = null;
@@ -1865,64 +1860,6 @@ document.addEventListener("DOMContentLoaded", function(){
   });
 });
 </script>
-<script>
-(function () {
-  const ISSUER = 'rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8';
-  const CURRENCY = 'CFC';
-  const WSS = 'wss://s1.ripple.com';
 
-  async function loadWalletBarBalances() {
-    try {
-      const account =
-        localStorage.getItem('xummAccount') ||
-        sessionStorage.getItem('cfc_addr') ||
-        localStorage.getItem('xrpl_account');
-
-      if (!account || !window.xrpl) return;
-
-      const connectedAddressEl = document.getElementById('connectedAddress');
-      const wbXrpEl = document.getElementById('wb_xrp');
-      const wbCfcEl = document.getElementById('wb_cfc');
-      const walletbarEl = document.getElementById('walletbar');
-
-      if (connectedAddressEl) connectedAddressEl.textContent = account;
-      if (walletbarEl) walletbarEl.style.display = 'flex';
-
-      const client = new xrpl.Client(WSS);
-      await client.connect();
-
-      const info = await client.request({
-        command: 'account_info',
-        account,
-        ledger_index: 'validated'
-      });
-
-      const xrpBalance = (Number(info.result.account_data.Balance) / 1000000).toFixed(6);
-
-      const lines = await client.request({
-        command: 'account_lines',
-        account,
-        peer: ISSUER,
-        ledger_index: 'validated'
-      });
-
-      const cfcLine = (lines.result.lines || []).find(
-        line => line.currency === CURRENCY
-      );
-
-      const cfcBalance = cfcLine ? cfcLine.balance : '0';
-
-      if (wbXrpEl) wbXrpEl.textContent = xrpBalance;
-      if (wbCfcEl) wbCfcEl.textContent = cfcBalance;
-
-      await client.disconnect();
-    } catch (error) {
-      console.error('Wallet bar balance load failed:', error);
-    }
-  }
-
-  window.addEventListener('load', loadWalletBarBalances);
-})();
-</script>
 </body> 
 </html>
