@@ -240,12 +240,12 @@ msg; b.style.display='block' }
       await ensureConnected()
       const info = await client.request({ command: 'account_info', account })
       const xrpBalance = (Number(info.result.account_data.Balance) / 1_000_000).toFixed(2)
-      document.getElementById('xrpBalance').textContent = `${xrpBalance} XRP`
+     document.getElementById('wb_xrp').textContent = `${xrpBalance} XRP`
 
       const lines = await client.request({ command: 'account_lines', account })
       const cfcLine = lines.result.lines.find(l => l.account === CONFIG.CFC_ISSUER && l.currency === CONFIG.CFC_CODE)
       const cfcBal = cfcLine ? cfcLine.balance : '0'
-      document.getElementById('cfcBalance').textContent = `${cfcBal} CFC`
+      document.getElementById('wb_cfc').textContent = `${cfcBal} CFC`
 
       const row = document.getElementById('trustlineRow')
       if(row){ row.style.display = cfcLine ? 'none' : 'flex' }
