@@ -323,9 +323,10 @@ async function claimFaucet() {
     } else {
       msgEl.textContent = '❌ ' + (err || 'Claim failed');
 
-      setTimeout(() => {
-        if (msgEl) msgEl.textContent = '';
-      }, 5000);
+    setTimeout(() => {
+  const el = document.getElementById('claimMsg') || document.getElementById('claimStatus');
+  if (el) el.textContent = '';
+}, 5000);
     }
   }
 }
