@@ -1,6 +1,7 @@
 
 
 
+
 <!DOCTYPE html>
 
 <html>
@@ -323,10 +324,9 @@ async function claimFaucet() {
     } else {
       msgEl.textContent = '❌ ' + (err || 'Claim failed');
 
-    setTimeout(() => {
-  const el = document.getElementById('claimMsg') || document.getElementById('claimStatus');
-  if (el) el.textContent = '';
-}, 5000);
+      setTimeout(() => {
+        if (msgEl) msgEl.textContent = '';
+      }, 5000);
     }
   }
 }
@@ -971,7 +971,13 @@ function cleanTexts(){
   });
 }
 </script>
+<!-- bootstrap: join + claim + divider (non-destructive) -->
+<script>
+(function(){
+  ...
 
+<!-- bootstrap: join + claim + divider (non-destructive) -->
+<script>
 (function(){
   
   function create(tag, attrs){
