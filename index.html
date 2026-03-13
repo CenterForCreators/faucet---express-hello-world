@@ -441,31 +441,7 @@ document.getElementById('claimBtn').addEventListener('click', claimFaucet)
 switchView('market')
 
   </script>
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  try {
-    if (typeof newCaptcha !== 'function') {
-      window._a=0;window._b=0;
-      window.newCaptcha=function(){
-        _a=Math.floor(Math.random()*10);_b=Math.floor(Math.random()*10);
-        var A=document.getElementById('numA'),B=document.getElementById('numB');
-        if(A)A.textContent=_a;if(B)B.textContent=_b;
-        var I=document.getElementById('captchaInput'); if(I) I.value='';
-      };
-    }
-    
-    const qb=document.getElementById('claimBtn');
-    if (qb && !qb.__bound){
-      qb.addEventListener('click', function(){
-        if (window.claimFaucet) return window.claimFaucet();
-        if (window.claim) return window.claim();
-      });
-      qb.__bound=true;
-    }
-    if (document.getElementById('numA') || document.getElementById('captchaInput')) newCaptcha();
-  } catch(e){}
-});
-</script>
+
 <style>
     #cfc-cap-ovl { display: none !important; }
 #cfc-cap-ovl{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:9999}
