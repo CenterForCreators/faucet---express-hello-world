@@ -275,20 +275,15 @@ msg; b.style.display='block' }
     .join('')
     .toUpperCase();
 }
+
 async function claimFaucet() {
-
-  const btn = document.getElementById('claimBtn');
-  if (btn && btn.disabled) return;
-
   const msgEl = document.getElementById('claimMsg') || document.getElementById('claimStatus');
   const spin = document.getElementById('claimSpin');
-
   try {
     if (typeof checkCaptcha === 'function' && !checkCaptcha()) {
       if (msgEl) msgEl.textContent = 'Please solve the math question.';
       return;
     }
-
     if (!account) {
       if (msgEl) msgEl.textContent = 'Connect your wallet first (top-right).';
       return;
