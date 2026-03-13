@@ -1218,40 +1218,7 @@ function cleanTexts(){
       }
     
 </script>
-<script id="cfc-connect-and-bindings">
-(function(){
-  if(window._cfcPatched) return; window._cfcPatched = true;
-  const connectBtn = document.getElementById('connectBtn');
-  const claimBtn = document.getElementById('claimBtn');
-  const ans = document.getElementById('capAns');
-  const addrBadge = document.getElementById('addrBadge') || document.getElementById('address') || document.getElementById('walletAddress');
 
- 
-  if(claimBtn){
-    claimBtn.onclick = null;
-    claimBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      if(typeof checkCaptcha==='function' ? checkCaptcha() : true){
-        if(typeof claimFaucet==='function') claimFaucet();
-      }
-    });
-  }
-  if(ans){ ans.addEventListener('input', function(){ if(typeof checkCaptcha==='function') checkCaptcha(); }); }
-  if(typeof newCaptcha==='function') newCaptcha();
-})();
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const savedAccount = localStorage.getItem("connectedAccount");
-  if (savedAccount) {
-    connectedAccount = savedAccount;
-    const connectBtn = document.getElementById("connect-btn");
-    const walletAddr = document.getElementById("wallet-address");
-    if (connectBtn) connectBtn.textContent = "Connected";
-    if (walletAddr) walletAddr.textContent = connectedAccount ? `Connected Wallet: ${connectedAccount}` : '';
-    if (typeof updateBalances === 'function') updateBalances(savedAccount);
-  }
-});
-</script>
 <!-- This block was showing as text; it MUST live inside <script> -->
 <script>
 try {
