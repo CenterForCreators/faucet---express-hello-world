@@ -650,56 +650,6 @@ try {
     return r.json();
   }
 
-  if(claimBtn && !claimBtn.__wired){
-    claimBtn.__wired = true;
-    claimBtn.addEventListener('click', async function(){
-      if(capQ && capA){
-        const ans = parseInt(capA.value||'NaN',10);
-        if(isNaN(ans) || ans !== (a+b)){
-          if(claimStatus){ claimStatus.className='status err'; claimStatus.textContent='Wrong math answer'; }
-          return;
-        }
-      }
-      if(!account){
-        alert('Connect Xaman first so we know your account.');
-        return;
-      }
-    if(claimStatus){ claimStatus.className='status warn'; claimStatus.textContent='Sending…'; }
-if(claimSpin){ claimSpin.style.display='inline-block'; }
-
-setTimeout(() => {
-  if(claimStatus && claimStatus.textContent === 'Sending…'){
-    claimStatus.textContent = '';
-  }
-  if(claimSpin){
-    claimSpin.style.display = 'none';
-  }
-}, 5000);
-      try{
-        const j = await postJson(CONFIG.FAUCET_ENDPOINT, { captcha_ok:true, account });
-        if(j && j.ok){
-          if(claimStatus){ claimStatus.className='status ok'; claimStatus.textContent='✅ 25 CFC sent (pending ledger)…'; }
-          setTimeout(()=>connectXRPLAndLoadBalances(account), 8000);
-        }else{
-          if (claimStatus){ 
-  claimStatus.className='status err'; 
-  claimStatus.textContent=''; 
-}
-        }
-      }catch(e){
-        if(claimStatus){
-  const txt = (e && e.message) ? e.message : '';
-  if(!txt.includes('tefPAST_SEQ')){
-    claimStatus.className='status err';
-    claimStatus.textContent='Network error';
-  }
-}
-      }finally{
-        if(claimSpin){ claimSpin.style.display='none'; }
-      }
-    });
-  }
-
   const joinEmail = gid('joinEmail') || gid('emailInput');
   const joinBtn = gid('joinBtn') || gid('emailSubmit');
   const joinStatus = gid('joinStatus') || gid('emailMsg');
