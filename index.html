@@ -489,7 +489,7 @@ switchView('market')
         if(isNaN(val) || val !== (__cfcA+__cfcB)){ if(E) E.textContent='Wrong answer — try again.'; regen(); return; }
         window.__cfcCaptchaPassed = true;
         hide();
-        try{ if (window.claimFaucet) return window.claimFaucet(); if (window.claim) return window.claim(); }catch(e){}
+        try{ if (window.claim) return window.claim(); }catch(e){}
       });
     }
     if(cancel){ cancel.addEventListener('click', hide); }
