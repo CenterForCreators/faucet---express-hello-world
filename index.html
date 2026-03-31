@@ -277,6 +277,9 @@ msg; b.style.display='block' }
 }
 
 async function claimFaucet() {
+    const btn = document.getElementById('claimBtn');
+if (btn.disabled) return;  // 🚫 stop rapid double-clicks
+btn.disabled = true;
   const msgEl = document.getElementById('claimMsg') || document.getElementById('claimStatus');
   const spin = document.getElementById('claimSpin');
   try {
@@ -290,7 +293,6 @@ async function claimFaucet() {
     }
 
     if (msgEl) msgEl.textContent = 'Claiming...';
-     document.getElementById('claimBtn').disabled = true; 
     if (spin) spin.style.display = 'inline-block';
 
     const ep = (window.CONFIG && (CONFIG.FAUCET_ENDPOINT || CONFIG.FAUCET_URL))
@@ -332,6 +334,7 @@ async function claimFaucet() {
 } finally {
   if (spin) spin.style.display = 'none';
   document.getElementById('claimBtn').disabled = false;
+      
 }
 }  
  
@@ -1152,49 +1155,6 @@ function cleanTexts(){
       (btn.parentElement||faucet||document.body).appendChild(status);
     }
   }
-
-  <script>
-/* SAFE claim handler: no backend error text is surfaced */
-(function(){
-  var btn = document.getElementById('claimBtn')
-      || document.querySelector('#faucet button.btn');
-  if (!btn) return;
-  if (btn.__wired) return;
-  btn.__wired = true;
-
-  btn.addEventListener('click', async function (ev) {
-    ev.preventDefault();
-    var status = document.getElementById('claimStatus')
-        || document.querySelector('#faucet .status');
-    var spin = document.getElementById('claimSpin');
-
-    if (status){ status.className='status warn'; status.textContent='Sending…'; }
-    if (spin){ spin.style.display='inline-block'; }
-
-    try {
-      const url = (window.CONFIG && (CONFIG.FAUCET_ENDPOINT || CONFIG.faucetEndpoint))
-                  || 'https://cfc-faucet.onrender.com/api/faucet';
-      const r = await fetch(url, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ captcha_ok: true })
-      });
-      const j = await r.json();
-
-      if (status){
-        if (j && j.ok){
-          var amt = (window.CONFIG && (CONFIG.faucetAmount || CONFIG.FAUCET_DAILY_AMOUNT)) || 25;
-          var code = (window.CONFIG && (CONFIG.currencyCode || CONFIG.CFC_CODE)) || 'CFC';
-          status.className='status ok';
-          status.textContent='✅ ' + amt + ' ' + code + ' sent!';
-        } else {
-          status.className='status err';
-          status.textContent='Request failed';
-          setTimeout(()=>{ statusEl.textContent=''; statusEl.className='status'; }, 5000);
-        }
-      }
-    
-</script>
 
 <!-- This block was showing as text; it MUST live inside <script> -->
 <script>
