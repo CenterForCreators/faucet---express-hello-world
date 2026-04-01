@@ -299,7 +299,10 @@ btn.disabled = true;
     const res = await fetch(ep, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ account: account, captcha_ok: true })
+    body: JSON.stringify({
+  wallet: account,
+  submission_id: 1
+})
     });
 
     const data = await res.json().catch(() => ({}));
