@@ -295,10 +295,7 @@ btn.disabled = true;
     if (msgEl) msgEl.textContent = 'Claiming...';
     if (spin) spin.style.display = 'inline-block';
 
-    const ep = (window.CONFIG && (CONFIG.FAUCET_ENDPOINT || CONFIG.FAUCET_URL))
-      ? (CONFIG.FAUCET_ENDPOINT || CONFIG.FAUCET_URL)
-      : 'https://cfc-faucet.onrender.com/api/faucet';
-
+   const ep = 'https://cfc-faucet.onrender.com/api/claim-nft-reward';
     const res = await fetch(ep, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
