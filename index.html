@@ -867,7 +867,7 @@ localStorage.setItem('xrpl_account', connectedAccount);
   const addrSpan = document.getElementById('connectedAddress');
   const xrpSpan = document.getElementById('wb_xrp');
   const cfcSpan = document.getElementById('wb_cfc');
-  const claimBtn = document.getElementById('claimButton') || document.querySelector('[data-claim]');
+  const claimBtn = document.getElementById('claimBtn');
   const captchaInput = document.getElementById('captchaAnswer') || document.querySelector('[data-captcha-answer]');
   const captchaA = document.getElementById('captchaA') || document.querySelector('[data-captcha-a]');
   const captchaB = document.getElementById('captchaB') || document.querySelector('[data-captcha-b]');
@@ -940,70 +940,6 @@ localStorage.setItem('xrpl_account', connectedAccount);
     refreshBalances(address);
   }
 
-
-  function generateCaptchaIfNeeded() {
-    if (!captchaA || !captchaB || !captchaInput) return;
-    // Assume the numbers are already rendered by backend/page; if not, set defaults
-    const a = parseInt(captchaA.textContent || captchaA.value || '0', 10);
-    const b = parseInt(captchaB.textContent || captchaB.value || '0', 10);
-    if (Number.isNaN(a) || Number.isNaN(b)) {
-      // Generate simple fallback numbers
-      const aa = Math.floor(1 + Math.random() * 9);
-      const bb = Math.floor(1 + Math.random() * 9);
-      captchaA.textContent = String(aa);
-      captchaB.textContent = String(bb);
-    }
-  }
-
-  async function handleClaim() {
-    try {
-      if (!connectedAccount || connectedAccount === 'undefined' || connectedAccount === null) {
-        setStatus('Please connect your wallet first.');
-        if (connectBtn) connectBtn.focus();
-        return;
-      }
-      // Validate captcha
-      if (!captchaA || !captchaB || !captchaInput) {
-        setStatus('Captcha not found.');
-        return;
-      }
-      const a = parseInt(captchaA.textContent || captchaA.value || '0', 10);
-      const b = parseInt(captchaB.textContent || captchaB.value || '0', 10);
-      const ans = parseInt(captchaInput.value || '0', 10);
-      if (ans !== (a + b)) {
-        setStatus('Captcha incorrect. Please try again.');
-        captchaInput.focus();
-        return;
-      }
-      setStatus('Requesting faucet...');
-      const res = await fetch(API_BASE + '/api/faucet', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ account: connectedAccount, captcha_ok: true })
-      });
-      if (!res.ok) {
-        const t = await res.text();
-        throw new Error(t || 'Faucet failed');
-      }
-      const data = await res.json().catch(()=>({}));
-      setStatus('Faucet sent: 25 CFC. Check your wallet.');
-      // Refresh balances after a short delay
-      setTimeout(() => refreshBalances(connectedAccount), 1500);
-    } catch (e) {
-      console.error(e);
-      setStatus('Faucet error: ' + (e.message || 'Unknown error'));
-    }
-  }
-
-  // Bind events
-  document.addEventListener('DOMContentLoaded', () => {
-    initXumm();
-    generateCaptchaIfNeeded();
-    if (connectBtn) connectBtn.addEventListener('click', handleConnect);
-    if (claimBtn) claimBtn.addEventListener('click', handleClaim);
-    // Disable claim until connected
-    if (claimBtn) claimBtn.setAttribute('disabled', 'disabled');
-  });
 })();
 </script>
 
