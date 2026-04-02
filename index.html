@@ -112,7 +112,7 @@
       <input id="capAns" inputmode="numeric" maxlength="2" placeholder="?" style="width:70px" type="text"/>
 <button class="btn small" onclick="if(window.regenCaptcha)window.regenCaptcha()" type="button">↻</button>
 </div>
-<button class="btn" id="claimBtn">Claim CFC</button>
+<button id="claimBtn" onclick="claimFaucet()">Claim CFC</button>
 
 <p class="muted" style="font-size:12px; margin-top:6px;">
   Not yet available on mobile devices.
@@ -439,7 +439,6 @@ document.getElementById('buy3rlusd').addEventListener('click', () => buyWithRLUS
 document.getElementById('buy1xrp').addEventListener('click', () => buyWithXRP(CONFIG.ITEMS[0]))
 document.getElementById('buy2xrp').addEventListener('click', () => buyWithXRP(CONFIG.ITEMS[1]))
 document.getElementById('buy3xrp').addEventListener('click', () => buyWithXRP(CONFIG.ITEMS[2]))
-document.getElementById('claimBtn').addEventListener('click', claimFaucet)
 
 switchView('market')
 
