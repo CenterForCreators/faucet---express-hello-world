@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 
 <html>
@@ -58,7 +59,7 @@
 <script>
     // ------- CONFIG (single block) -------
     window.CONFIG = { USE_CORS_PROXY: true, CORS_PROXY: 'https://cors.isomorphic-git.org/', 
-      FAUCET_ENDPOINT: 'https://cfc-nft-shared-mint-backend.onrender.com/api/claim-nft-reward',
+      FAUCET_ENDPOINT: 'https://cfc-faucet.onrender.com/api/claim-nft-reward',
       faucetAmount: 25,
       currencyCode: 'CFC',
       issuer: 'rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8',
@@ -216,7 +217,7 @@
   XUMM_API_KEY: 'e130c57f-bd16-4458-bee3-de32826dd900',
   EMAIL_FALLBACK_URL: 'https://centerforcreators.com/contact',
   RECEIVER_XRP: 'rU15yYD3cHmNXGxHJSJGoLUSogxZ17FpKd',
-  FAUCET_ENDPOINT: 'https://cfc-nft-shared-mint-backend.onrender.com/api/claim-nft-reward',
+  FAUCET_ENDPOINT:'https://cfc-faucet.onrender.com/api/claim-nft-reward',
   FAUCET_DAILY_AMOUNT: '25',
   ITEMS: [
     { id: 'svc1', name: 'Private Strategy Session', priceRLUSD: '500', priceXRP: '219' },
@@ -295,7 +296,7 @@ btn.disabled = true;
     if (msgEl) msgEl.textContent = 'Claiming...';
     if (spin) spin.style.display = 'inline-block';
 
-   const ep = 'https://cfc-nft-shared-mint-backend.onrender.com/api/claim-nft-reward',
+   const ep = 'https://cfc-faucet.onrender.com/api/claim-nft-reward';
     const res = await fetch(ep, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
