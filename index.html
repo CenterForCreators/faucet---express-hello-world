@@ -310,24 +310,16 @@ btn.disabled = true;
 
     const data = await res.json().catch(() => ({}));
 
-    if (data && data.ok) {
-      if (msgEl) msgEl.textContent = '✅ Claimed 25 CFC successfully!';
-      try { await connectXRPLAndLoadBalances(account); } catch (_) {}
-      try { if (typeof regenCaptcha === 'function') regenCaptcha(); } catch (_) {}
-      try { if (typeof newCaptcha === 'function') newCaptcha(); } catch (_) {}  // moved here
-  } else {
-  if (msgEl) {
-    const err = (data && (data.error || data.message)) || '';
+   if (data && data.ok) {
+  if (msgEl) msgEl.textContent = '✅ Claimed 25 CFC successfully!';
 
-    if (msgEl) {
+  try { await connectXRPLAndLoadBalances(account); } catch (_) {}
+  try { if (typeof regenCaptcha === 'function') regenCaptcha(); } catch (_) {}
+  try { if (typeof newCaptcha === 'function') newCaptcha(); } catch (_) {}
+
+} else {
   const err = (data && (data.error || data.message)) || 'Claim failed';
-  msgEl.textContent = '❌ ' + err;
-
-  setTimeout(() => {
-    if (msgEl) msgEl.textContent = '';
-  }, 5000);
-}
-  }
+  if (msgEl) msgEl.textContent = '❌ ' + err;
 }
 
   } catch (e) {
