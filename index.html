@@ -313,7 +313,7 @@ btn.disabled = true;
    if (data && data.ok) {
   if (msgEl) msgEl.textContent = '✅ Claimed 25 CFC successfully!';
 
-  try { await connectXRPLAndLoadBalances(account); } catch (_) {}
+  try { await connectXRPLAndLoadBalances(connectedAccount);
   try { if (typeof regenCaptcha === 'function') regenCaptcha(); } catch (_) {}
   try { if (typeof newCaptcha === 'function') newCaptcha(); } catch (_) {}
 
@@ -484,7 +484,7 @@ switchView('market')
         if(isNaN(val) || val !== (__cfcA+__cfcB)){ if(E) E.textContent='Wrong answer — try again.'; regen(); return; }
         window.__cfcCaptchaPassed = true;
         hide();
-        try{ if (window.claim) return window.claim(); }catch(e){}
+       try{ if (window.claimFaucet) return window.claimFaucet(); }catch(e){}
       });
     }
     if(cancel){ cancel.addEventListener('click', hide); }
