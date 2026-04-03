@@ -286,10 +286,7 @@ btn.disabled = true;
  const msgEl = document.getElementById('claimStatus');
   const spin = document.getElementById('claimSpin');
   try {
-    if (typeof checkCaptcha === 'function' && !checkCaptcha()) {
-      if (msgEl) msgEl.textContent = 'Please solve the math question.';
-      return;
-    }
+   
     if (!connectedAccount) {
       if (msgEl) msgEl.textContent = 'Connect your wallet first (top-right).';
       return;
@@ -313,8 +310,6 @@ btn.disabled = true;
   if (msgEl) msgEl.textContent = '✅ Claimed 25 CFC successfully!';
 
   try { await connectXRPLAndLoadBalances(connectedAccount);
-  try { if (typeof regenCaptcha === 'function') regenCaptcha(); } catch (_) {}
-  try { if (typeof newCaptcha === 'function') newCaptcha(); } catch (_) {}
 
 } else {
   const err = (data && (data.error || data.message)) || 'Claim failed';
