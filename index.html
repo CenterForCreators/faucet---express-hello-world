@@ -1089,9 +1089,6 @@ try {
   }
 
   // Delay only the claim wiring by 300ms to improve Chrome wallet sync
-  setTimeout(() => {
-    try { if (typeof wireClaim==='function') wireClaim(); } catch(e){}
-  }, 300);
   
   ensureJoinForm();
   wireJoin();
@@ -1101,7 +1098,7 @@ try {
 
   if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', boot); }
   else { boot(); }
-  try { new MutationObserver(boot).observe(document.documentElement, { childList:true, subtree:true }); } catch(e){}
+  
 })();
 </script>
 <script>
