@@ -1001,24 +1001,6 @@ function cleanTexts(){
     }
   }
 
-  // Ensure claim spinner/status elements after claimBtn
-  function ensureClaimUI(){
-    var btn = $('#claimBtn');
-    if (!btn) return;
-    var next = btn.nextElementSibling;
-    var hasSpin = !!$('#claimSpin', btn.parentElement || document);
-    var hasStatus = !!$('#claimStatus', btn.parentElement || document) || !!document.getElementById('claimStatus');
-    if (!hasSpin){
-      var spin = create('div', { id:'claimSpin', class:'spinner' });
-      spin.style.display = 'none';
-      btn.insertAdjacentElement('afterend', spin);
-    }
-    if (!hasStatus){
-      var status = create('div', { id:'claimStatus', class:'status' });
-      (btn.parentElement||faucet||document.body).appendChild(status);
-    }
-  }
-
 <!-- This block was showing as text; it MUST live inside <script> -->
 <script>
 try {
@@ -1100,11 +1082,6 @@ try {
       }
     });
   }
-
- function boot(){
-  try { if (typeof ensureDividerCSS==='function') ensureDividerCSS(); } catch(e){}
-  try { if (typeof ensureFaucetDivider==='function') ensureFaucetDivider(); } catch(e){}
-  try { if (typeof ensureClaimUI==='function') ensureClaimUI(); } catch(e){}
 
   // Delay only the claim wiring by 300ms to improve Chrome wallet sync
   setTimeout(() => {
