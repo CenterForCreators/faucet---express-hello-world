@@ -299,7 +299,7 @@ btn.disabled = true;
     });
 
     const data = await res.json().catch(() => ({}));
-
+console.log('FAUCET RESPONSE:', data);
 if (data && data.ok) {
   msgEl.className = 'status ok';
   msgEl.textContent = '✅ Claimed 25 CFC successfully!';
