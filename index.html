@@ -278,7 +278,13 @@ async function claimFaucet() {
     const btn = document.getElementById('claimBtn');
 if (btn.disabled) return;  // 🚫 stop rapid double-clicks
 btn.disabled = true;
- const msgEl = document.getElementById('claimStatus');
+ let msgEl = document.getElementById('claimStatus');
+
+if (!msgEl) {
+  msgEl = document.createElement('div');
+  msgEl.id = 'claimStatus';
+  btn.after(msgEl);
+}
   const spin = document.getElementById('claimSpin');
   try {
    
