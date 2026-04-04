@@ -300,14 +300,13 @@ btn.disabled = true;
 
     const data = await res.json().catch(() => ({}));
 
-   if (data && data.ok) {
-  if (msgEl) msgEl.textContent = '✅ Claimed 25 CFC successfully!';
-
-  try { await connectXRPLAndLoadBalances(connectedAccount);
-
+if (data && data.ok) {
+  msgEl.className = 'status ok';
+  msgEl.textContent = '✅ Claimed 25 CFC successfully!';
 } else {
   const err = (data && (data.error || data.message)) || 'Claim failed';
-  if (msgEl) msgEl.textContent = '❌ ' + err;
+  msgEl.className = 'status err';
+  msgEl.textContent = '❌ ' + err;
 }
 
   } catch (e) {
@@ -321,7 +320,6 @@ btn.disabled = true;
   }
 }
 
- 
 async function buyWithXRP(item){
 
       const amountDrops = Math.round(Number(item.priceXRP) * 1_000_000).toString()
