@@ -271,6 +271,7 @@ msg; b.style.display='block' }
 }
 
 async function claimFaucet() {
+    console.log('CONNECTED ACCOUNT:', connectedAccount);
      if (window.__claiming) return;
   window.__claiming = true;
 
