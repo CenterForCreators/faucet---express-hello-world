@@ -295,19 +295,21 @@ btn.disabled = true;
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ wallet: connectedAccount })
 });
-
 const data = await res.json().catch(() => ({}));
 
-msgEl.classList.remove('ok', 'err');
+setTimeout(() => {
+  msgEl.classList.remove('ok', 'err');
 
-if (data && data.ok) {
-  msgEl.classList.add('ok');
-  msgEl.textContent = '✅ Claimed 25 CFC successfully!';
-} else {
-  msgEl.classList.add('err');
-  const err = (data && (data.error || data.message)) || 'Claim failed';
-  msgEl.textContent = '❌ ' + err;
-}
+  if (data && data.ok) {
+    msgEl.classList.add('ok');
+    msgEl.textContent = 'Success! Faucet sent.';
+  } else {
+    msgEl.classList.add('err');
+    const err = (data && (data.error || data.message)) || 'Claim failed';
+    msgEl.textContent = err;
+  }
+}, 50);
+
   } catch (e) {
   console.error('claim error', e);
   if (msgEl) msgEl.textContent = 'Server error. Try again.';
