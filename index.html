@@ -290,13 +290,14 @@ btn.disabled = true;
     if (spin) spin.style.display = 'inline-block';
 
    const ep = 'https://cfc-nft-shared-mint-backend.onrender.com/api/faucet-claim';
-    const res = await fetch(ep, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-  wallet: connectedAccount,
-})
-    });
+  const res = await fetch(ep, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ wallet: connectedAccount })
+});
+
+const data = await res.json().catch(() => ({}));
+
 msgEl.classList.remove('ok', 'err');
 
 if (data && data.ok) {
