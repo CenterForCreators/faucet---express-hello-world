@@ -107,7 +107,7 @@
 <div class="tag" id="faucetStatus">Server: Waiting for URL</div>
 </div>
 
-<button id="claimBtn" onclick="claimFaucet()">Claim CFC</button>
+<button id="claimBtn">Claim CFC</button>
 
 <p class="muted" style="font-size:12px; margin-top:6px;">
   Not yet available on mobile devices.
@@ -422,6 +422,7 @@ async function buyWithXRP(item){
     })
 
    document.getElementById('connectBtn').addEventListener('click', connectXaman)
+    document.getElementById('claimBtn').addEventListener('click', claimFaucet);
 document.getElementById('buy1rlusd').addEventListener('click', () => buyWithRLUSD(CONFIG.ITEMS[0]))
 document.getElementById('buy2rlusd').addEventListener('click', () => buyWithRLUSD(CONFIG.ITEMS[1]))
 document.getElementById('buy3rlusd').addEventListener('click', () => buyWithRLUSD(CONFIG.ITEMS[2]))
@@ -476,7 +477,6 @@ switchView('market')
         if(isNaN(val) || val !== (__cfcA+__cfcB)){ if(E) E.textContent='Wrong answer — try again.'; regen(); return; }
         window.__cfcCaptchaPassed = true;
         hide();
-       try{ if (window.claimFaucet) return window.claimFaucet(); }catch(e){}
       });
     }
     if(cancel){ cancel.addEventListener('click', hide); }
