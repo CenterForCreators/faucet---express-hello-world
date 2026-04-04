@@ -917,19 +917,21 @@ localStorage.setItem('xrpl_account', connectedAccount);
   })();
 
   // Auto-clear success message after 5s
-  (function(){
-    var nodes = [gid('faucet-result'), gid('claimStatus')].filter(Boolean);
-    nodes.forEach(function(node){
-      var obs = new MutationObserver(function(){
-        var txt = (node.textContent || '').toLowerCase();
-        if (txt.includes('success') && txt.includes('faucet')){
-          setTimeout(function(){ node.textContent=''; }, 5000);
-        }
-      });
-      obs.observe(node, { childList:true, subtree:true, characterData:true });
-    });
-  })();
+  msgEl.classList.remove('ok', 'err');
 
+if (data && data.ok) {
+  msgEl.classList.add('ok');
+  msgEl.textContent = 'Success! Faucet sent.';
+} else {
+  msgEl.classList.add('err');
+  const err = (data && (data.error || data.message)) || 'Claim failed';
+  msgEl.textContent = err;
+}
+
+// ✅ auto-clear AFTER showing (safe)
+setTimeout(() => {
+  msgEl.textContent = '';
+}, 5000);
   function init(){
     updateWallet();
     connectToggle();
