@@ -520,10 +520,7 @@ if (document.readyState === 'loading') {
 } else {
   setTimeout(bindAll, 500);
 }
-try {
-  new MutationObserver(() => setTimeout(bindAll, 500))
-    .observe(document.documentElement, { childList: true, subtree: true });
-} catch(e) {}
+
 })();
 // ---- end safe init ----
   </script>
