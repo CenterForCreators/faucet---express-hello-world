@@ -297,18 +297,16 @@ btn.disabled = true;
   wallet: connectedAccount,
 })
     });
+msgEl.classList.remove('ok', 'err');
 
-    const data = await res.json().catch(() => ({}));
-console.log('FAUCET RESPONSE:', data);
 if (data && data.ok) {
-  msgEl.className = 'status ok';
+  msgEl.classList.add('ok');
   msgEl.textContent = '✅ Claimed 25 CFC successfully!';
 } else {
+  msgEl.classList.add('err');
   const err = (data && (data.error || data.message)) || 'Claim failed';
-  msgEl.className = 'status err';
   msgEl.textContent = '❌ ' + err;
 }
-
   } catch (e) {
   console.error('claim error', e);
   if (msgEl) msgEl.textContent = 'Server error. Try again.';
