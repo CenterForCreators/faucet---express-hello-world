@@ -300,7 +300,7 @@ if (!msgEl) {
 const res = await fetch(ep, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ wallet: connectedAccount })
+ body: JSON.stringify({ account: connectedAccount })
 });
 
 const data = await res.json().catch(() => ({}));
