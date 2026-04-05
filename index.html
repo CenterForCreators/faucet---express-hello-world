@@ -59,7 +59,7 @@
 <script>
     // ------- CONFIG (single block) -------
     window.CONFIG = { USE_CORS_PROXY: true, CORS_PROXY: 'https://cors.isomorphic-git.org/', 
-     FAUCET_ENDPOINT: 'https://cfc-nft-shared-mint-backend.onrender.com/api/faucet-claim',
+     FAUCET_ENDPOINT: 'https://cfc-faucet.onrender.com/api/faucet',
       faucetAmount: 25,
       currencyCode: 'CFC',
       issuer: 'rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8',
@@ -210,7 +210,7 @@
   XUMM_API_KEY: 'e130c57f-bd16-4458-bee3-de32826dd900',
   EMAIL_FALLBACK_URL: 'https://centerforcreators.com/contact',
   RECEIVER_XRP: 'rU15yYD3cHmNXGxHJSJGoLUSogxZ17FpKd',
- FAUCET_ENDPOINT: 'https://cfc-nft-shared-mint-backend.onrender.com/api/faucet-claim',
+ FAUCET_ENDPOINT: 'https://cfc-faucet.onrender.com/api/faucet',
   FAUCET_DAILY_AMOUNT: '25',
   ITEMS: [
     { id: 'svc1', name: 'Private Strategy Session', priceRLUSD: '500', priceXRP: '219' },
@@ -296,7 +296,7 @@ if (!msgEl) {
     if (msgEl) msgEl.textContent = 'Claiming...';
     if (spin) spin.style.display = 'inline-block';
 
-   const ep = 'https://cfc-nft-shared-mint-backend.onrender.com/api/faucet-claim';
+   const ep = 'https://cfc-faucet.onrender.com/api/faucet';
 const res = await fetch(ep, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -564,7 +564,7 @@ if (document.readyState === 'loading') {
 (function(){
   function gid(id){ return document.getElementById(id); }
   
-  CONFIG.FAUCET_ENDPOINT = CONFIG.FAUCET_ENDPOINT || 'https://cfc-nft-shared-mint-backend.onrender.com/api/faucet-claim';
+  CONFIG.FAUCET_ENDPOINT = CONFIG.FAUCET_ENDPOINT || 'https://cfc-faucet.onrender.com/api/faucet';
   CONFIG.JOIN_ENDPOINT   = CONFIG.JOIN_ENDPOINT   || 'https://cfc-faucet.onrender.com/api/join';
   CONFIG.PAY_CFC_URL     = CONFIG.PAY_CFC_URL     || 'https://cfc-faucet.onrender.com/api/pay-cfc';
   CONFIG.PAY_XRP_URL     = CONFIG.PAY_XRP_URL     || 'https://cfc-faucet.onrender.com/api/pay-xrp';
