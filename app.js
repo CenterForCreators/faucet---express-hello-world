@@ -222,7 +222,7 @@ app.post("/api/faucet", async (req, res) => {
   try {
     const { account, captcha_ok } = req.body || {};
 
-    if (!captcha_ok) return res.status(400).json({ ok: false, error: "Captcha required" });
+   
     if (!account || !/^r[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(account)) {
       return res.status(400).json({ ok: false, error: "Invalid account" });
     }
