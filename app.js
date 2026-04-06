@@ -369,7 +369,46 @@ app.get("*", (req, res) => {
   }
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+app.post("/api/reward-claim", async (req, res) => {
+  const { wallet } = req.body;
 
+  if (!wallet) {
+    return res.status(400).json({ error: "Missing wallet" });
+  }
+
+  try {
+    // 🔁 Connect to XRPL (same as faucet)
+    const client = new xrpl.Client(process.env.XRPL_NETWORK);
+    await client.connect();
+
+    const walletSeed = process.env.FAUCET_SEED; // reuse same seed
+    const sender = xrpl.Wallet.fromSeed(walletSeed);
+
+    // 💰 SEND 100 CFC
+    const tx = {
+      TransactionType: "Payment",
+      Account: sender.address,
+      Destination: wallet,
+      Amount: {
+        currency: "CFC",
+        issuer: "rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8",
+        value: "100"
+      }
+    };
+
+    const prepared = await client.autofill(tx);
+    const signed = sender.sign(prepared);
+    const result = await client.submitAndWait(signed.tx_blob);
+
+    await client.disconnect();
+
+    return res.json({ success: true, result });
+
+  } catch (err) {
+    console.error("Reward claim error:", err);
+    return res.status(500).json({ error: "Failed to send reward" });
+  }
+});
 /* -------------------------------------------------
    START SERVER
 ---------------------------------------------------*/
