@@ -370,21 +370,36 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 app.post("/api/reward-claim", async (req, res) => {
-  const { wallet } = req.body;
+  const { wallet, submissionId } = req.body;
 
-  if (!wallet) {
-    return res.status(400).json({ error: "Missing wallet" });
+  if (!wallet || !submissionId) {
+    return res.status(400).json({ error: "Missing params" });
   }
 
   try {
-    // 🔁 Connect to XRPL (same as faucet)
+    // ✅ 1. Check if user owns this purchase AND not claimed
+    const orderCheck = await pool.query(
+      `SELECT id, reward_claimed FROM orders 
+       WHERE buyer_wallet = $1 
+       AND marketplace_nft_id = $2 
+       LIMIT 1`,
+      [wallet, submissionId]
+    );
+
+    if (!orderCheck.rows.length) {
+      return res.status(403).json({ error: "No valid purchase found" });
+    }
+
+    if (orderCheck.rows[0].reward_claimed) {
+      return res.status(400).json({ error: "Already claimed" });
+    }
+
+    // ✅ 2. SEND 100 CFC (same as before)
     const client = new xrpl.Client(process.env.XRPL_NETWORK);
     await client.connect();
 
-    const walletSeed = process.env.FAUCET_SEED; // reuse same seed
-    const sender = xrpl.Wallet.fromSeed(walletSeed);
+    const sender = xrpl.Wallet.fromSeed(process.env.FAUCET_SEED);
 
-    // 💰 SEND 100 CFC
     const tx = {
       TransactionType: "Payment",
       Account: sender.address,
@@ -398,11 +413,16 @@ app.post("/api/reward-claim", async (req, res) => {
 
     const prepared = await client.autofill(tx);
     const signed = sender.sign(prepared);
-    const result = await client.submitAndWait(signed.tx_blob);
-
+    await client.submitAndWait(signed.tx_blob);
     await client.disconnect();
 
-    return res.json({ success: true, result });
+    // ✅ 3. MARK AS CLAIMED
+    await pool.query(
+      `UPDATE orders SET reward_claimed = TRUE WHERE id = $1`,
+      [orderCheck.rows[0].id]
+    );
+
+    return res.json({ success: true });
 
   } catch (err) {
     console.error("Reward claim error:", err);
