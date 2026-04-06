@@ -227,7 +227,7 @@ app.post("/api/faucet", async (req, res) => {
       return res.status(400).json({ ok: false, error: "Invalid account" });
     }
 
-   const { rows } = await client.query(
+  const { rows } = await pool.query(
   "SELECT last_claim_at FROM faucet_claims WHERE wallet = $1",
   [account]
 );
@@ -250,7 +250,7 @@ if (rows.length) {
     if (!issuer || !seed)
       return res.status(500).json({ ok: false, error: "Server faucet not configured" });
 
-    const client = new xrpl.Client(process.env.RIPPLED_URL || "wss://s1.ripple.com");
+  const xrplClient = new xrpl.Client(process.env.RIPPLED_URL || "wss://s1.ripple.com");
     await client.connect();
 
     const al = await client.request({
