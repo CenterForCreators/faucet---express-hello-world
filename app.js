@@ -1,3 +1,4 @@
+
 // ===== FIXED app.js — Render/iPhone/Edge Safe =====
 
 const fetch = global.fetch || ((...a) => import('node-fetch').then(m => m.default(...a)));
@@ -222,12 +223,12 @@ app.post("/api/faucet", async (req, res) => {
   try {
     const { account, captcha_ok } = req.body || {};
 
-   
+    if (!captcha_ok) return res.status(400).json({ ok: false, error: "Captcha required" });
     if (!account || !/^r[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(account)) {
       return res.status(400).json({ ok: false, error: "Invalid account" });
     }
 
-  const { rows } = await pool.query(
+   const { rows } = await client.query(
   "SELECT last_claim_at FROM faucet_claims WHERE wallet = $1",
   [account]
 );
@@ -250,7 +251,7 @@ if (rows.length) {
     if (!issuer || !seed)
       return res.status(500).json({ ok: false, error: "Server faucet not configured" });
 
-  const xrplClient = new xrpl.Client(process.env.RIPPLED_URL || "wss://s1.ripple.com");
+    const client = new xrpl.Client(process.env.RIPPLED_URL || "wss://s1.ripple.com");
     await client.connect();
 
     const al = await client.request({
@@ -308,6 +309,56 @@ if (rows.length) {
   }
 });
 
+// ------------------------------
+// CLAIM NFT REWARD (SignIn payload) — handle BEFORE XRPL tx lookup
+// ------------------------------
+if (metaBlob?.action === "claim_nft_reward") {
+  const wallet = metaBlob.wallet;
+  const submission_id = metaBlob.submission_id;
+
+  if (!wallet || !submission_id) return res.json({ ok: true });
+
+  // one-time claim check
+  const { rows } = await pool.query(
+    `SELECT 1 FROM nft_reward_claims WHERE wallet=$1 AND submission_id=$2`,
+    [wallet, submission_id]
+  );
+
+  if (rows.length) return res.json({ ok: true });
+
+  // send 100 CFC (same mechanism as faucet, but NOT changing faucet code)
+  const issuer = process.env.CFC_ISSUER;
+  const seed = process.env.FAUCET_SEED;
+  const currency = process.env.CFC_CURRENCY || "CFC";
+
+  const xrplClient = new xrpl.Client(process.env.RIPPLED_URL || "wss://s1.ripple.com");
+  await xrplClient.connect();
+
+  const faucetWallet = xrpl.Wallet.fromSeed(seed);
+
+  const tx = {
+    TransactionType: "Payment",
+    Account: faucetWallet.classicAddress,
+    Destination: wallet,
+    Amount: { currency, issuer, value: "100" }
+  };
+
+  const filled = await xrplClient.autofill(tx, { max_ledger_offset: 60 });
+  const signed = faucetWallet.sign(filled);
+  const result = await xrplClient.submitAndWait(signed.tx_blob);
+
+  await xrplClient.disconnect();
+
+  if (result.result?.meta?.TransactionResult === "tesSUCCESS") {
+    await pool.query(
+      `INSERT INTO nft_reward_claims (wallet, submission_id, claimed_at)
+       VALUES ($1,$2,NOW())`,
+      [wallet, submission_id]
+    );
+  }
+
+  return res.json({ ok: true });
+}
 
 /* -------------------------------------------------
    4) CATCH-ALL ROUTE — MUST NOT BLOCK /sdk
