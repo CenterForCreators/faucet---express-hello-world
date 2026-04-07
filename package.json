@@ -6,7 +6,8 @@
     "express": "^4.19.2",
     "xrpl": "^2.11.0",
     "node-fetch": "^3.3.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "pg": "^8.11.0"
   },
   "scripts": { "start": "node app.js" }
 }
