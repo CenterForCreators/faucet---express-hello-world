@@ -8,7 +8,14 @@ const cors = require("cors");
 const path = require("path");
 
 const app = express();
+const { Pool } = require("pg");
 
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 /* -------------------------------------------------
    NEW FIX — PREVENT RENDER FROM CACHING/REWRITING JS
 ---------------------------------------------------*/
