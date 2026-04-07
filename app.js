@@ -308,7 +308,61 @@ if (rows.length) {
     return res.status(500).json({ ok: false, error: String(e.message || e) });
   }
 });
+app.post("/api/reward-claim", async (req, res) => {
+  const { wallet, submissionId } = req.body;
 
+  if (!wallet || !submissionId) {
+    return res.status(400).json({ error: "Missing params" });
+  }
+
+  try {
+    // check already claimed
+    const existing = await pool.query(
+      `SELECT 1 FROM nft_reward_claims 
+       WHERE wallet = $1 AND submission_id = $2`,
+      [wallet, submissionId]
+    );
+
+    if (existing.rows.length) {
+      return res.status(400).json({ error: "Already claimed" });
+    }
+
+    // send 100 CFC
+    const client = new xrpl.Client(process.env.XRPL_NETWORK);
+    await client.connect();
+
+    const sender = xrpl.Wallet.fromSeed(process.env.FAUCET_SEED);
+
+    const tx = {
+      TransactionType: "Payment",
+      Account: sender.address,
+      Destination: wallet,
+      Amount: {
+        currency: "CFC",
+        issuer: "rsxUkmjnAn8PRDz8RYrPusb9mTDYn5NqG8",
+        value: "100"
+      }
+    };
+
+    const prepared = await client.autofill(tx);
+    const signed = sender.sign(prepared);
+    await client.submitAndWait(signed.tx_blob);
+    await client.disconnect();
+
+    // mark claimed
+    await pool.query(
+      `INSERT INTO nft_reward_claims (wallet, submission_id, claimed_at)
+       VALUES ($1, $2, NOW())`,
+      [wallet, submissionId]
+    );
+
+    return res.json({ success: true });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to send reward" });
+  }
+});
 /* -------------------------------------------------
    START SERVER
 ---------------------------------------------------*/
