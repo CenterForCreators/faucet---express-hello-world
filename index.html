@@ -700,6 +700,7 @@ if(connectedAccount){
 })();
 </script>
 <script>
+   var connectedAccount = localStorage.getItem('xrpl_account'); 
 (function(){
   // augment config safely
   window.CONFIG = Object.assign(window.CONFIG||{}, {
@@ -719,7 +720,6 @@ if(connectedAccount){
   function byId(id){ return document.getElementById(id); }
 
   // Connect handler
-  var connectedAccount = null;
   function connectXaman(){
     try{
       if(!window.Xumm){ console.warn('Xumm SDK not loaded'); return; }
@@ -745,15 +745,9 @@ localStorage.setItem('xrpl_account', connectedAccount);
       localStorage.setItem('xummAccount', connectedAccount);
     } catch(e){}
 
-    window.location.href = "https://centerforcreators.com/nft-marketplace";
+    window.location.reload();
   }
 
-});
-          var cs = byId('connStatus'); if(cs) cs.textContent='Connected';
-          var ac = byId('acct'); if(ac) ac.textContent=connectedAccount;
-          refreshBalances();
-        }
-      });
     }catch(e){ console.error(e); }
   }
   var btn = document.getElementById('connectBtn');
@@ -797,6 +791,7 @@ localStorage.setItem('xrpl_account', connectedAccount);
 })();
 
 </div></div>
+</script>
 <script>
 (function() {
   // Configuration
