@@ -623,6 +623,7 @@ if (document.readyState === 'loading') {
   if(account){
     showBar(); setStatus('Connected'); setAccount(account);
     try{var _b=document.getElementById('connectBtn'); if(_b){ _b.textContent='Connected'; _b.disabled=false; }}catch(e){} connectXRPLAndLoadBalances(account);
+setInterval(() => connectXRPLAndLoadBalances(account), 10000); 
   }
 
   const claimBtn = gid('claimBtn');
