@@ -788,6 +788,10 @@ localStorage.setItem('xrpl_account', connectedAccount);
       return orig.apply(this, arguments);
     }
   }
+       if (connectedAccount) {
+  refreshBalances();
+  setInterval(refreshBalances, 10000);
+}
 })();
 
 </div></div>
