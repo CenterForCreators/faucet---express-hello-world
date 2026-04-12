@@ -767,13 +767,13 @@ localStorage.setItem('xrpl_account', connectedAccount);
       try{
         var ai = await c.request({ command:'account_info', account:connectedAccount, ledger_index:'validated' });
         var xrp = (ai.result && ai.result.account_data && ai.result.account_data.Balance) ? (ai.result.account_data.Balance/1e6).toFixed(6) : '—';
-        var el = byId('xrpBal'); if(el) el.textContent = xrp;
+       var el = byId('wb_xrp'); if(el) el.textContent = xrp;
       }catch(e){}
       try{
         var al = await c.request({ command:'account_lines', account:connectedAccount, ledger_index:'validated' });
         var line = ((al.result && al.result.lines) || []).find(function(l){ return l.currency==='CFC'; });
         var cfc = line ? line.balance : '—';
-        var el2 = byId('cfcBal'); if(el2) el2.textContent = cfc;
+        var el2 = byId('wb_cfc'); if(el2) el2.textContent = cfc;
       }catch(e){}
     }catch(e){ console.warn(e); }
   }
