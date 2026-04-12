@@ -740,10 +740,17 @@ x.payload.createAndSubscribe(
 
   if (res?.signed && res?.response?.account) {
     connectedAccount = res.response.account;
-localStorage.setItem('xrpl_account', connectedAccount);
+    localStorage.setItem('xrpl_account', connectedAccount);
     try {
       localStorage.setItem('xummAccount', connectedAccount);
     } catch(e){}
+
+    window.location.reload();
+  }
+
+}).catch(function(e){
+  console.error(e);
+});
 
     window.location.reload();
   }
